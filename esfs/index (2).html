@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILICE CAYO — MDT Opérationnel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-0:#0a0b0d;
+  --bg-1:#0f1115;
+  --bg-2:#14161c;
+  --bg-3:#1a1d25;
+  --bg-4:#21252f;
+  --bg-5:#282d38;
+  --border:#ffffff0d;
+  --border-md:#ffffff16;
+  --border-hi:#ffffff26;
+  --text-0:#edeef2;
+  --text-1:#9da3b4;
+  --text-2:#5c6278;
+  --text-3:#363a4a;
+  --gold:#c9a84c;
+  --gold-dim:rgba(201,168,76,0.1);
+  --gold-mid:rgba(201,168,76,0.22);
+  --gold-hi:rgba(201,168,76,0.4);
+  --green:#2d9e6b;
+  --green-dim:rgba(45,158,107,0.1);
+  --red:#c0392b;
+  --red-dim:rgba(192,57,43,0.1);
+  --orange:#c97a2d;
+  --orange-dim:rgba(201,122,45,0.1);
+  --blue:#2d6dc9;
+  --blue-dim:rgba(45,109,201,0.1);
+  --sidebar-w:228px;
+  --hh:50px;
+  --r:5px;
+  --rlg:8px;
+  --tr:130ms ease;
+  --font:'Syne',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg-0);color:var(--text-0);min-height:100vh;font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* ── SHELL ── */
+.shell{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);background:var(--bg-1);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;inset:0 auto 0 0;z-index:200;
+}
+.sb-head{
+  height:var(--hh);display:flex;align-items:center;gap:10px;
+  padding:0 16px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.sb-emblem{
+  width:30px;height:30px;border-radius:var(--r);flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),#8a6a1f);
+  display:flex;align-items:center;justify-content:center;
+}
+.sb-emblem svg{width:16px;height:16px;fill:#0a0b0d}
+.sb-labels .sb-name{font-size:12.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-0)}
+.sb-labels .sb-sub{font-size:9.5px;color:var(--text-2);font-family:var(--mono);letter-spacing:0.04em;margin-top:1px}
+
+.sb-user{
+  padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.sb-user-row{
+  display:flex;align-items:center;gap:9px;padding:7px 8px;
+  border-radius:var(--r);cursor:pointer;transition:var(--tr);
+}
+.sb-user-row:hover{background:var(--bg-3)}
+.av{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--bg-4);border:1px solid var(--border-md);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--gold);
+  flex-shrink:0;overflow:hidden;font-family:var(--mono);
+}
+.av img{width:100%;height:100%;object-fit:cover}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-0)}
+.sb-user-grade{font-size:9.5px;font-family:var(--mono);color:var(--gold);letter-spacing:0.04em;margin-top:1px}
+.online{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+.sb-nav{flex:1;overflow-y:auto;padding:6px 0}
+.sb-section{font-size:8.5px;font-weight:600;color:var(--text-3);letter-spacing:0.12em;text-transform:uppercase;padding:12px 16px 5px}
+.nav-i{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 16px;cursor:pointer;font-size:12.5px;font-weight:500;
+  color:var(--text-1);border-left:2px solid transparent;
+  transition:var(--tr);position:relative;
+}
+.nav-i:hover{color:var(--text-0);background:rgba(255,255,255,0.02)}
+.nav-i.on{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim)}
+.nav-i svg{width:14px;height:14px;flex-shrink:0;opacity:0.6}
+.nav-i.on svg{opacity:1}
+.npill{
+  margin-left:auto;font-size:9px;font-family:var(--mono);
+  padding:1px 6px;border-radius:3px;background:var(--bg-4);color:var(--text-2);
+}
+.npill.g{background:var(--gold-dim);color:var(--gold)}
+.npill.r{background:var(--red-dim);color:var(--red)}
+
+.sb-conn{
+  padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;
+  display:flex;gap:6px;
+}
+.conn-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.conn-row{display:flex;align-items:center;gap:5px;font-size:10px;font-family:var(--mono);color:var(--text-2)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:var(--hh);background:var(--bg-1);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:10px;
+  position:sticky;top:0;z-index:100;flex-shrink:0;
+}
+.bc{display:flex;align-items:center;gap:6px;font-size:10.5px;font-family:var(--mono)}
+.bc-root{color:var(--text-2)}
+.bc-sep{color:var(--text-3)}
+.bc-cur{color:var(--text-1)}
+.sp{flex:1}
+.srch{
+  display:flex;align-items:center;gap:7px;
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--r);padding:5px 10px;width:210px;transition:var(--tr);
+}
+.srch:focus-within{border-color:var(--border-hi)}
+.srch svg{width:12px;height:12px;color:var(--text-3);flex-shrink:0}
+.srch input{background:none;border:none;outline:none;color:var(--text-0);font-family:var(--mono);font-size:11px;width:100%}
+.srch input::placeholder{color:var(--text-3)}
+.tb-clock{font-family:var(--mono);font-size:10.5px;color:var(--text-2);letter-spacing:0.04em}
+.tb-sep{width:1px;height:16px;background:var(--border)}
+.ib{
+  width:28px;height:28px;border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:1px solid var(--border);
+  color:var(--text-2);cursor:pointer;transition:var(--tr);position:relative;
+}
+.ib:hover{border-color:var(--border-md);color:var(--text-1);background:var(--bg-3)}
+.ib svg{width:12px;height:12px}
+.ib .dot{position:absolute;top:4px;right:4px;width:4px;height:4px;border-radius:50%;background:var(--red);border:1px solid var(--bg-1)}
+
+/* ── CONTENT ── */
+.content{flex:1;padding:18px 22px;overflow-y:auto}
+.page{display:none;animation:fi 0.14s ease}
+.page.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PAGE HDR ── */
+.pgh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.pgh-l .pgt{font-size:20px;font-weight:700;letter-spacing:-0.02em;line-height:1.2}
+.pgh-l .pgs{font-size:10.5px;color:var(--text-2);font-family:var(--mono);margin-top:3px;letter-spacing:0.04em}
+.pgh-r{display:flex;gap:7px;align-items:center}
+
+/* ── KPI ── */
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:18px}
+.kpi{
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--rlg);padding:14px 15px;
+}
+.kpi-l{font-size:9.5px;font-weight:600;color:var(--text-2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.kpi-v{font-size:28px;font-weight:400;font-family:var(--mono);line-height:1;margin-bottom:4px;color:var(--text-0)}
+.kpi-d{font-size:10px;color:var(--text-2)}
+.kpi-d.g{color:var(--green)}
+
+/* ── CARD ── */
+.card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden}
+.ch{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 15px;border-bottom:1px solid var(--border);
+}
+.ct{font-size:12.5px;font-weight:600;color:var(--text-0)}
+.cs{font-size:10px;color:var(--text-2);font-family:var(--mono);margin-top:1px}
+.ca{display:flex;gap:6px}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:collapse}
+thead th{
+  padding:8px 13px;text-align:left;
+  font-size:9px;font-weight:600;color:var(--text-3);
+  letter-spacing:0.1em;text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+tbody td{padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:var(--tr)}
+tbody tr:hover{background:rgba(255,255,255,0.018)}
+
+/* ── BTN ── */
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:var(--r);
+  font-family:var(--font);font-size:12px;font-weight:600;
+  cursor:pointer;border:1px solid;transition:var(--tr);line-height:1;
+  letter-spacing:0.01em;
+}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:#0a0b0d}
+.btn-gold:hover{filter:brightness(1.1)}
+.btn-gh{background:transparent;border-color:var(--border-md);color:var(--text-1)}
+.btn-gh:hover{border-color:var(--border-hi);color:var(--text-0);background:rgba(255,255,255,0.03)}
+.btn-d{background:var(--red-dim);border-color:rgba(192,57,43,0.25);color:var(--red)}
+.btn-d:hover{background:rgba(192,57,43,0.18)}
+.btn-s{background:var(--green-dim);border-color:rgba(45,158,107,0.25);color:var(--green)}
+.btn-s:hover{background:rgba(45,158,107,0.18)}
+.btn-w{background:var(--orange-dim);border-color:rgba(201,122,45,0.25);color:var(--orange)}
+.btn-sm{padding:5px 10px;font-size:11.5px}
+.btn-xs{padding:3px 8px;font-size:11px}
+.btn svg{width:11px;height:11px}
+
+/* ── TAGS ── */
+.tag{
+  display:inline-flex;align-items:center;
+  padding:2px 7px;border-radius:3px;font-size:9.5px;
+  font-weight:600;letter-spacing:0.05em;border:1px solid;
+  font-family:var(--mono);text-transform:uppercase;
+}
+.tg{color:var(--green);border-color:rgba(45,158,107,0.25);background:var(--green-dim)}
+.tr2{color:var(--red);border-color:rgba(192,57,43,0.25);background:var(--red-dim)}
+.to{color:var(--orange);border-color:rgba(201,122,45,0.25);background:var(--orange-dim)}
+.tb{color:var(--blue);border-color:rgba(45,109,201,0.25);background:var(--blue-dim)}
+.tm{color:var(--text-2);border-color:var(--border);background:var(--bg-3)}
+
+/* grade tags */
+.gtag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-family:var(--mono);
+  padding:2px 7px;border-radius:3px;border:1px solid;
+}
+.gtag.g0{color:var(--text-2);border-color:var(--border);background:var(--bg-3)}
+.gtag.g1{color:#7a9fd4;border-color:rgba(122,159,212,0.25);background:rgba(122,159,212,0.08)}
+.gtag.g2{color:#b090e0;border-color:rgba(176,144,224,0.25);background:rgba(176,144,224,0.08)}
+.gtag.g3{color:var(--gold);border-color:var(--gold-mid);background:var(--gold-dim)}
+.gtag.g4{color:#e07070;border-color:rgba(224,112,112,0.25);background:rgba(224,112,112,0.08)}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gap{height:12px}
+
+/* ── FEED ── */
+.fi{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:10px 15px;border-bottom:1px solid var(--border);
+  transition:var(--tr);
+}
+.fi:last-child{border-bottom:none}
+.fi:hover{background:rgba(255,255,255,0.015)}
+.fd{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.fb{flex:1}
+.ft{font-size:12px;color:var(--text-1);line-height:1.5}
+.ft strong{color:var(--text-0);font-weight:600}
+.fts{font-size:10px;color:var(--text-3);font-family:var(--mono);margin-top:1px}
+
+/* ── FORM ── */
+.fld{display:flex;flex-direction:column;gap:5px}
+.lbl{font-size:9.5px;font-weight:600;color:var(--text-2);letter-spacing:0.08em;text-transform:uppercase}
+.inp,.sel,.ta{
+  background:var(--bg-1);border:1px solid var(--border-md);
+  border-radius:var(--r);color:var(--text-0);
+  font-family:var(--font);font-size:12.5px;
+  padding:7px 10px;outline:none;transition:var(--tr);width:100%;
+}
+.inp:focus,.sel:focus,.ta:focus{border-color:var(--gold)}
+.sel{cursor:pointer}
+.sel option{background:var(--bg-2)}
+.ta{resize:vertical;min-height:80px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* ── MODAL ── */
+.ov{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity 0.18s ease;
+}
+.ov.open{opacity:1;pointer-events:all}
+.mo{
+  background:var(--bg-2);border:1px solid var(--border-md);
+  border-radius:var(--rlg);width:100%;max-width:520px;
+  transform:translateY(10px);transition:transform 0.18s ease;overflow:hidden;
+}
+.ov.open .mo{transform:translateY(0)}
+.mo-lg{max-width:660px}
+.mo-xl{max-width:800px}
+.mh{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 18px;border-bottom:1px solid var(--border);
+}
+.mt{font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.mc{
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  background:none;border:1px solid var(--border);border-radius:4px;
+  color:var(--text-2);cursor:pointer;font-size:14px;transition:var(--tr);
+}
+.mc:hover{border-color:var(--red);color:var(--red)}
+.mb{padding:18px;display:flex;flex-direction:column;gap:12px;max-height:68vh;overflow-y:auto}
+.mf{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:7px}
+
+/* ── PROGRESS ── */
+.prog{height:2px;background:var(--bg-4);border-radius:1px;overflow:hidden}
+.pf{height:100%;border-radius:1px;transition:width 0.5s ease}
+
+/* ── DISCORD ROLE ROW ── */
+.role-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 15px;border-bottom:1px solid var(--border);
+  transition:var(--tr);
+}
+.role-row:hover{background:rgba(255,255,255,0.015)}
+.role-row:last-child{border-bottom:none}
+.role-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.role-name{flex:1;font-size:12.5px;font-weight:500}
+.role-id{font-size:10px;font-family:var(--mono);color:var(--text-2)}
+.role-count{font-size:11px;font-family:var(--mono);color:var(--text-2)}
+
+/* ── MEMBER CARD ── */
+.mc2{
+  background:var(--bg-3);border:1px solid var(--border);
+  border-radius:var(--rlg);padding:14px;
+  display:flex;gap:12px;align-items:flex-start;
+  transition:var(--tr);
+}
+.mc2:hover{border-color:var(--border-md)}
+.mc2-body{flex:1;min-width:0}
+.mc2-name{font-size:13px;font-weight:600;margin-bottom:3px}
+.mc2-sub{font-size:10.5px;font-family:var(--mono);color:var(--text-2);margin-bottom:8px}
+.mc2-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.mc2-foot{display:flex;gap:6px}
+
+/* ── PERM MATRIX ── */
+.perm-grid{display:grid;gap:1px;background:var(--border)}
+.perm-row{display:grid;grid-template-columns:1fr repeat(5,60px);background:var(--bg-2);align-items:center}
+.perm-cell{padding:8px 10px;font-size:11.5px}
+.perm-cell.hd{font-size:9px;font-weight:600;color:var(--text-3);letter-spacing:0.1em;text-transform:uppercase;text-align:center}
+.perm-check{display:flex;align-items:center;justify-content:center}
+.perm-check input{width:14px;height:14px;accent-color:var(--gold);cursor:pointer}
+
+/* ── TOAST ── */
+.toasts{position:fixed;top:58px;right:14px;z-index:900;display:flex;flex-direction:column;gap:5px}
+.tst{
+  background:var(--bg-3);border:1px solid var(--border-md);
+  border-radius:var(--r);padding:10px 13px;min-width:250px;
+  display:flex;gap:9px;align-items:flex-start;
+  animation:ti 0.2s ease;border-left:2px solid var(--gold);
+}
+.tst.s{border-left-color:var(--green)}
+.tst.e{border-left-color:var(--red)}
+.tst.w{border-left-color:var(--orange)}
+@keyframes ti{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+.tst-t{font-size:12px;font-weight:600;color:var(--text-0)}
+.tst-m{font-size:10.5px;color:var(--text-2);margin-top:1px}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  position:fixed;inset:0;background:var(--bg-0);
+  display:flex;align-items:center;justify-content:center;
+  z-index:2000;flex-direction:column;gap:24px;
+}
+.login-box{
+  background:var(--bg-2);border:1px solid var(--border-md);
+  border-radius:var(--rlg);padding:36px 40px;
+  text-align:center;max-width:380px;width:100%;
+}
+.login-emblem{
+  width:56px;height:56px;border-radius:var(--rlg);
+  background:linear-gradient(135deg,var(--gold),#8a6a1f);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+}
+.login-emblem svg{width:28px;height:28px;fill:#0a0b0d}
+.login-title{font-size:22px;font-weight:800;letter-spacing:0.05em;margin-bottom:4px}
+.login-sub{font-size:11px;font-family:var(--mono);color:var(--text-2);margin-bottom:28px}
+.login-discord{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:#5865F2;border:none;border-radius:var(--r);
+  padding:12px 24px;width:100%;cursor:pointer;transition:var(--tr);
+  font-family:var(--font);font-size:14px;font-weight:700;color:#fff;
+  letter-spacing:0.02em;
+}
+.login-discord:hover{filter:brightness(1.1)}
+.login-discord svg{width:20px;height:20px;fill:#fff}
+.login-note{font-size:10px;color:var(--text-3);font-family:var(--mono);margin-top:16px;line-height:1.6}
+
+/* ── SETUP WIZARD ── */
+#setupScreen{
+  position:fixed;inset:0;background:var(--bg-0);
+  display:none;align-items:center;justify-content:center;
+  z-index:2000;
+}
+.setup-box{
+  background:var(--bg-2);border:1px solid var(--border-md);
+  border-radius:var(--rlg);padding:0;max-width:560px;width:100%;overflow:hidden;
+}
+.setup-progress{height:3px;background:var(--bg-4)}
+.setup-pf{height:100%;background:var(--gold);transition:width 0.4s ease}
+.setup-body{padding:32px 36px;min-height:360px;display:flex;flex-direction:column}
+.setup-step{display:none;flex:1;flex-direction:column;gap:16px}
+.setup-step.on{display:flex}
+.setup-stepnum{font-size:10px;font-family:var(--mono);color:var(--text-2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px}
+.setup-title{font-size:20px;font-weight:800;margin-bottom:4px;letter-spacing:-0.01em}
+.setup-desc{font-size:12px;color:var(--text-1);line-height:1.6;margin-bottom:16px}
+.setup-foot{padding:16px 36px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+
+/* ── TOGGLE ── */
+.tog{position:relative;width:32px;height:18px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0}
+.ttr{position:absolute;inset:0;background:var(--bg-4);border-radius:9px;cursor:pointer;border:1px solid var(--border);transition:var(--tr)}
+.tog input:checked+.ttr{background:var(--gold);border-color:var(--gold)}
+.ttr::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:0.15s ease}
+.tog input:checked+.ttr::after{transform:translateX(14px)}
+
+/* ── COLOR DOT ── */
+.cdot{width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block}
+
+/* ── MISC ── */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:2px}
+.mono{font-family:var(--mono)}
+.di{color:var(--text-2)}
+.mu{color:var(--text-3)}
+.sep{height:1px;background:var(--border);margin:14px 0}
+@media(max-width:1100px){.kpi-g{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══ TOASTS ══ -->
+<div class="toasts" id="toastCt"></div>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-emblem">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+    </div>
+    <div class="login-title">MILICE CAYO</div>
+    <div class="login-sub">SYSTÈME MDT · ACCÈS RESTREINT</div>
+    <button class="login-discord" onclick="doLogin()">
+      <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055 2.052 1.507 4.04 2.422 5.994 3.029a.077.077 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.106 13.106 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.029.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+      Connexion via Discord
+    </button>
+    <div class="login-note">Accès réservé aux membres du serveur Discord.<br>Vos rôles Discord définissent vos permissions MDT.</div>
+  </div>
+</div>
+
+<!-- ══ SETUP WIZARD (first run) ══ -->
+<div id="setupScreen">
+  <div class="setup-box">
+    <div class="setup-progress"><div class="setup-pf" id="setupPf" style="width:20%"></div></div>
+    <div class="setup-body">
+      <!-- Step 1 -->
+      <div class="setup-step on" id="step1">
+        <div>
+          <div class="setup-stepnum">Étape 1 / 5 — Serveur Discord</div>
+          <div class="setup-title">Configuration Discord</div>
+          <div class="setup-desc">Renseignez les informations de votre bot Discord. Ces paramètres sont stockés côté backend (.env).</div>
+        </div>
+        <div class="fld"><label class="lbl">Token du Bot Discord</label><input class="inp" id="s-token" placeholder="MTxxxxxx.Gyyyyy.zzzzz" type="password"></div>
+        <div class="fld"><label class="lbl">Client ID (Application)</label><input class="inp" id="s-cid" placeholder="123456789012345678"></div>
+        <div class="fld"><label class="lbl">Client Secret</label><input class="inp" id="s-csec" placeholder="abc123..." type="password"></div>
+        <div class="fld"><label class="lbl">Guild ID (Serveur Discord)</label><input class="inp" id="s-gid" placeholder="987654321098765432"></div>
+      </div>
+      <!-- Step 2 -->
+      <div class="setup-step" id="step2">
+        <div>
+          <div class="setup-stepnum">Étape 2 / 5 — Lier les grades</div>
+          <div class="setup-title">Grades → Rôles Discord</div>
+          <div class="setup-desc">Associez chaque grade MDT à un rôle Discord. Les membres verront leur grade attribué automatiquement.</div>
+        </div>
+        <div id="gradeRoleMap" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <!-- Step 3 -->
+      <div class="setup-step" id="step3">
+        <div>
+          <div class="setup-stepnum">Étape 3 / 5 — Permissions MDT</div>
+          <div class="setup-title">Permissions par grade</div>
+          <div class="setup-desc">Définissez ce que chaque grade peut faire dans le MDT.</div>
+        </div>
+        <div class="card" style="overflow:auto">
+          <div class="perm-grid" id="permMatrix"></div>
+        </div>
+      </div>
+      <!-- Step 4 -->
+      <div class="setup-step" id="step4">
+        <div>
+          <div class="setup-stepnum">Étape 4 / 5 — Webhooks</div>
+          <div class="setup-title">Canaux Discord</div>
+          <div class="setup-desc">Configurez les webhooks pour les notifications automatiques.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="fld"><label class="lbl">Webhook — Rapports</label><input class="inp" id="wh-r" placeholder="https://discord.com/api/webhooks/…"></div>
+          <div class="fld"><label class="lbl">Webhook — Sanctions</label><input class="inp" id="wh-s" placeholder="https://discord.com/api/webhooks/…"></div>
+          <div class="fld"><label class="lbl">Webhook — Formations</label><input class="inp" id="wh-f" placeholder="https://discord.com/api/webhooks/…"></div>
+          <div class="fld"><label class="lbl">Webhook — Logs généraux</label><input class="inp" id="wh-g" placeholder="https://discord.com/api/webhooks/…"></div>
+        </div>
+      </div>
+      <!-- Step 5 -->
+      <div class="setup-step" id="step5">
+        <div>
+          <div class="setup-stepnum">Étape 5 / 5 — Confirmation</div>
+          <div class="setup-title">Prêt au déploiement</div>
+          <div class="setup-desc">Votre configuration est complète. Le fichier <code style="font-family:var(--mono);color:var(--gold)">.env</code> et <code style="font-family:var(--mono);color:var(--gold)">config.json</code> seront générés.</div>
+        </div>
+        <div class="card" style="padding:14px">
+          <div id="setupSummary" style="display:flex;flex-direction:column;gap:8px;font-size:12px;font-family:var(--mono);color:var(--text-1)"></div>
+        </div>
+        <div style="background:var(--gold-dim);border:1px solid var(--gold-mid);border-radius:var(--r);padding:12px;font-size:11.5px;color:var(--gold);line-height:1.6">
+          Copiez le fichier <strong>.env.generated</strong> dans votre dossier backend, puis lancez : <code>npm run dev</code>
+        </div>
+      </div>
+    </div>
+    <div class="setup-foot">
+      <button class="btn btn-gh btn-sm" id="setupBack" onclick="setupPrev()" style="visibility:hidden">← Retour</button>
+      <span style="font-size:10px;font-family:var(--mono);color:var(--text-3)" id="setupStepLabel">1 / 5</span>
+      <button class="btn btn-gold btn-sm" id="setupNext" onclick="setupNext()">Suivant →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP SHELL ══ -->
+<div class="shell" id="appShell" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-head">
+      <div class="sb-emblem">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      </div>
+      <div class="sb-labels">
+        <div class="sb-name" id="orgName">Milice Cayo</div>
+        <div class="sb-sub" id="orgSub">MDT · Opérationnel</div>
+      </div>
+    </div>
+
+    <div class="sb-user">
+      <div class="sb-user-row" onclick="navigate('profil')">
+        <div class="av" id="sbAvatar">?</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sbName">Chargement…</div>
+          <div class="sb-user-grade" id="sbGrade">—</div>
+        </div>
+        <div class="online"></div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <div class="nav-i on" data-p="dashboard">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Tableau de bord
+      </div>
+      <div class="nav-i" data-p="membres">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        Membres
+        <span class="npill g" id="navMemCount">—</span>
+      </div>
+      <div class="nav-i" data-p="rapports">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15h8v2H8zm0-4h8v2H8z"/></svg>
+        Rapports
+        <span class="npill" id="navRepCount">—</span>
+      </div>
+      <div class="nav-i" data-p="formations">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18V17h2v-4.82L9 13.36V17c0 0 2.14 3 3 3s3-3 3-3v-3.64l7-3.82V5.18L12 3z"/></svg>
+        Formations
+      </div>
+      <div class="sb-section">Discord</div>
+      <div class="nav-i" data-p="roles">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055 2.052 1.507 4.04 2.422 5.994 3.029a.077.077 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.076.076 0 0 0-.041-.106a13.106 13.106 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.029.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+        Rôles Discord
+      </div>
+      <div class="nav-i" data-p="permissions">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        Permissions
+      </div>
+      <div class="sb-section">Système</div>
+      <div class="nav-i" data-p="notifications">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        Notifications
+        <span class="npill r" id="navNotifCount">3</span>
+      </div>
+      <div class="nav-i" data-p="config">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        Configuration
+      </div>
+    </nav>
+
+    <div class="sb-conn">
+      <div>
+        <div class="conn-row"><div class="conn-dot" style="background:var(--green)"></div>API Discord</div>
+        <div class="conn-row" style="margin-top:3px"><div class="conn-dot" id="botDot" style="background:var(--green)"></div>Bot <span id="botTag" style="color:var(--text-1)">MDT-BOT#0000</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="bc"><span class="bc-root">CAYO</span><span class="bc-sep">/</span><span class="bc-cur" id="bcCur">dashboard</span></div>
+      <div class="sp"></div>
+      <div class="srch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input placeholder="Rechercher membre, rapport…" id="gSearch" oninput="doSearch(this.value)">
+      </div>
+      <div class="tb-clock mono" id="clock">--:--:--</div>
+      <div class="tb-sep"></div>
+      <button class="ib" onclick="navigate('notifications')" title="Notifications">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <div class="dot" id="notifDot"></div>
+      </button>
+      <button class="ib" onclick="syncBot()" title="Sync Discord">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+      </button>
+    </header>
+
+    <div class="content">
+
+      <!-- ══ DASHBOARD ══ -->
+      <div class="page on" id="page-dashboard">
+        <div class="pgh">
+          <div class="pgh-l"><div class="pgt">Tableau de bord</div><div class="pgs">MILICE CAYO · TEMPS RÉEL · <span id="dashSvc">SERVICE ACTIF</span></div></div>
+        </div>
+        <div class="kpi-g">
+          <div class="kpi"><div class="kpi-l">Membres actifs</div><div class="kpi-v" id="kMem">0</div><div class="kpi-d g">Discord synchronisé</div></div>
+          <div class="kpi"><div class="kpi-l">Rapports</div><div class="kpi-v" id="kRep">0</div><div class="kpi-d">Cette semaine</div></div>
+          <div class="kpi"><div class="kpi-l">Formations validées</div><div class="kpi-v" id="kForm">0</div><div class="kpi-d">En cours: <span id="kFormPend">0</span></div></div>
+          <div class="kpi"><div class="kpi-l">Rôles Discord</div><div class="kpi-v" id="kRoles">0</div><div class="kpi-d">Bot connecté</div></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><div><div class="ct">Activité récente</div><div class="cs">Actions en temps réel</div></div></div>
+            <div id="feedCt"></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div><div class="ct">Grades — répartition</div><div class="cs">Membres par grade</div></div></div>
+            <div style="padding:14px;display:flex;flex-direction:column;gap:10px" id="gradeBars"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MEMBRES ══ -->
+      <div class="page" id="page-membres">
+        <div class="pgh">
+          <div class="pgh-l"><div class="pgt">Membres</div><div class="pgs">FICHES · GRADES DISCORD · SANCTIONS</div></div>
+          <div class="pgh-r">
+            <button class="btn btn-gh btn-sm" onclick="syncBot()">↻ Sync Discord</button>
+            <button class="btn btn-gold btn-sm" onclick="openMo('addMember')">+ Ajouter</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px" id="memFilters">
+          <button class="btn btn-gh btn-xs on-filter" data-mf="all" onclick="filterMem(this,'all')">Tous</button>
+          <button class="btn btn-gh btn-xs" data-mf="actif" onclick="filterMem(this,'actif')">Actifs</button>
+          <button class="btn btn-gh btn-xs" data-mf="suspendu" onclick="filterMem(this,'suspendu')">Suspendus</button>
+          <button class="btn btn-gh btn-xs" data-mf="exclu" onclick="filterMem(this,'exclu')">Exclus</button>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Membre</th><th>Grade MDT</th><th>Rôle Discord</th><th>Statut</th><th>Rapports</th><th>Sanctions</th><th></th></tr></thead>
+            <tbody id="memTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ RAPPORTS ══ -->
+      <div class="page" id="page-rapports">
+        <div class="pgh">
+          <div class="pgh-l"><div class="pgt">Rapports</div><div class="pgs">CRÉATION · HISTORIQUE · EXPORT · DISCORD</div></div>
+          <div class="pgh-r">
+            <button class="btn btn-gh btn-sm" onclick="exportAll()">Export PDF</button>
+            <button class="btn btn-gold btn-sm" onclick="openMo('addReport')">+ Nouveau</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px" id="repFilters"></div>
+        <div class="card" id="repList"></div>
+      </div>
+
+      <!-- ══ FORMATIONS ══ -->
+      <div class="page" id="page-formations">
+        <div class="pgh">
+          <div class="pgh-l"><div class="pgt">Formations</div><div class="pgs">CATALOGUE · VALIDATION · RÔLES DISCORD AUTO</div></div>
+          <div class="pgh-r"><button class="btn btn-gold btn-sm" onclick="openMo('addFormation')">+ Créer</button></div>
+        </div>
+        <div class="g3" id="formGrid"></div>
+        <div class="gap"></div>
+        <div class="card">
+          <div class="ch"><div class="ct">Assignations</div></div>
+          <table>
+            <thead><tr><th>Membre</th><th>Formation</th><th>Date</th><th>Validateur</th><th>Statut</th><th></th></tr></thead>
+            <tbody id="assignTb"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ RÔLES DISCORD ══ -->
+      <div class="page" id="page-roles">
+        <div class="pgh">
+          <div class="pgh-l"><div class="pgt">Rôles Discord</div><div class="pgs">SYNCHRONISATION · GESTION · LIAISON GRADES MDT</div></div>
+          <div class="pgh-r">
+            <button class="btn btn-gh btn-sm" onclick="syncBot()">↻ Fetch Discord</button>
+            <button class="btn btn-gold btn-sm" onclick="openMo('addRole')">+ Associer rôle</button>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><div><div class="ct">Rôles du serveur</div><div class="cs">Récupérés via bot</div></div></div>
+            <div id="discordRoles"></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div><div class="ct">Liaison Grade → Rôle</div><div class="cs">Attribution automatique</div></div></div>
+            <div id="gradeRoleLinks"></div>
+            <div style="padding:12px 15px;border-top:1px solid var(--border)">
+              <button class="btn btn-gold btn-sm" style="width:100%;justify-content:center" onclick="saveGradeRoles()">Sauvegarder les liaisons</button>
+            </div>
+          </div>
+        </div>
+        <div class="gap"></div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">Membres & Rôles</div><div class="cs">Vue Discord complète</div></div></div>
+          <table>
+            <thead><tr><th>Membre Discord</th><th>Username</th><th>Rôles actuels</th><th>Grade MDT</th><th>Actions</th></tr></thead>
+            <tbody id="memberRoleTb"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ PERMISSIONS ══ -->
+      <div class="page" id="page-permissions">
+        <div class="pgh">
+          <div class="pgh-l"><div class="pgt">Permissions MDT</div><div class="pgs">ACCÈS PAR GRADE · MODULES · ACTIONS</div></div>
+          <div class="pgh-r"><button class="btn btn-gold btn-sm" onclick="savePerms()">Sauvegarder</button></div>
+        </div>
+        <div class="card" style="overflow-x:auto">
+          <div class="perm-grid" id="permTable"></div>
+        </div>
+        <div class="gap"></div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><div class="ct">Rôles Discord → Accès MDT</div></div>
+            <div style="padding:14px;display:flex;flex-direction:column;gap:10px" id="roleAccessMap"></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Rôles autorisés à se connecter</div></div>
+            <div style="padding:14px;display:flex;flex-direction:column;gap:8px" id="allowedRoles"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ NOTIFICATIONS ══ -->
+      <div class="page" id="page-notifications">
+        <div class="pgh">
+          <div class="pgh-l"><div class="pgt">Notifications</div></div>
+          <div class="pgh-r"><button class="btn btn-gh btn-sm" onclick="markAllRead()">Tout lire</button></div>
+        </div>
+        <div class="card" id="notifCt"></div>
+      </div>
+
+      <!-- ══ PROFIL ══ -->
+      <div class="page" id="page-profil">
+        <div class="pgh"><div class="pgh-l"><div class="pgt">Mon profil</div><div class="pgs">INFORMATIONS · GRADES · HISTORIQUE</div></div></div>
+        <div class="g2">
+          <div class="card" id="profilCard"></div>
+          <div class="card">
+            <div class="ch"><div class="ct">Mes rapports</div></div>
+            <div id="myReports" style="padding:14px;font-size:12px;color:var(--text-2)">Aucun rapport soumis.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CONFIG ══ -->
+      <div class="page" id="page-config">
+        <div class="pgh"><div class="pgh-l"><div class="pgt">Configuration</div><div class="pgs">BOT · WEBHOOKS · ORGANISATION · SÉCURITÉ</div></div></div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><div class="ct">Bot Discord</div></div>
+            <div class="mb" style="max-height:none" id="cfgBot"></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Webhooks Discord</div><div class="ca"><button class="btn btn-gh btn-xs" onclick="openMo('addWh')">+ Ajouter</button></div></div>
+            <div id="cfgWebhooks"></div>
+          </div>
+        </div>
+        <div class="gap"></div>
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><div class="ct">Organisation</div></div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+              <div class="fld"><label class="lbl">Nom de l'unité</label><input class="inp" id="cfg-name" value="Milice Cayo" oninput="applyOrgName(this.value)"></div>
+              <div class="fld"><label class="lbl">Sous-titre</label><input class="inp" id="cfg-sub" value="MDT · Opérationnel" oninput="applyOrgSub(this.value)"></div>
+              <div class="fld"><label class="lbl">Couleur d'accent</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px" id="cfgAccents"></div>
+              </div>
+              <button class="btn btn-gold btn-sm" style="margin-top:4px" onclick="saveOrgConfig()">Sauvegarder</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Sécurité & Sessions</div></div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:10px" id="cfgSecurity"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+<div class="ov" id="ov-addMember">
+  <div class="mo">
+    <div class="mh"><span class="mt">Ajouter un membre</span><button class="mc" onclick="closeMo('addMember')">×</button></div>
+    <div class="mb">
+      <div class="r2">
+        <div class="fld"><label class="lbl">ID Discord</label><input class="inp" id="am-did" placeholder="123456789012345678" oninput="lookupDiscord(this.value)"></div>
+        <div class="fld"><label class="lbl">Nom RP</label><input class="inp" id="am-rp" placeholder="J. Dubois"></div>
+      </div>
+      <div id="am-preview" style="display:none;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r);padding:12px;display:flex;align-items:center;gap:10px">
+        <div class="av" id="am-pav">?</div>
+        <div id="am-pinfo" style="font-size:12px;color:var(--text-1)">Entrez un ID Discord valide…</div>
+      </div>
+      <div class="r2">
+        <div class="fld"><label class="lbl">Grade MDT</label><select class="sel" id="am-grade"></select></div>
+        <div class="fld"><label class="lbl">Statut</label>
+          <select class="sel" id="am-status">
+            <option value="actif">Actif</option>
+            <option value="suspendu">Suspendu</option>
+            <option value="exclu">Exclu</option>
+          </select>
+        </div>
+      </div>
+      <div class="fld"><label class="lbl">Notes internes</label><textarea class="ta" id="am-notes" style="min-height:60px" placeholder="Observations, recrutement, contexte…"></textarea></div>
+      <div style="background:var(--gold-dim);border:1px solid var(--gold-mid);border-radius:var(--r);padding:10px;font-size:11px;color:var(--gold)">
+        Le rôle Discord correspondant au grade sera attribué automatiquement via le bot.
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-gh" onclick="closeMo('addMember')">Annuler</button>
+      <button class="btn btn-gold" onclick="submitMember()">Créer + Attribuer rôle Discord</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov-addReport">
+  <div class="mo mo-lg">
+    <div class="mh"><span class="mt">Nouveau rapport</span><button class="mc" onclick="closeMo('addReport')">×</button></div>
+    <div class="mb">
+      <div class="r2">
+        <div class="fld"><label class="lbl">Type</label><select class="sel" id="ar-type"></select></div>
+        <div class="fld"><label class="lbl">Agent responsable</label><select class="sel" id="ar-agent"></select></div>
+      </div>
+      <div class="fld"><label class="lbl">Titre</label><input class="inp" id="ar-titre" placeholder="Résumé de l'intervention"></div>
+      <div class="fld"><label class="lbl">Description</label><textarea class="ta" id="ar-desc" style="min-height:100px" placeholder="Faits, circonstances, suites…"></textarea></div>
+      <div class="fld"><label class="lbl">Membres impliqués (optionnel)</label><select class="sel" id="ar-involved" multiple style="height:80px"></select></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-gh" onclick="closeMo('addReport')">Annuler</button>
+      <button class="btn btn-gold" onclick="submitReport()">Soumettre + Notifier Discord</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov-addFormation">
+  <div class="mo">
+    <div class="mh"><span class="mt">Créer une formation</span><button class="mc" onclick="closeMo('addFormation')">×</button></div>
+    <div class="mb">
+      <div class="fld"><label class="lbl">Intitulé</label><input class="inp" id="af-nom" placeholder="Ex : Formation tir longue portée"></div>
+      <div class="r2">
+        <div class="fld"><label class="lbl">Grade requis</label><select class="sel" id="af-grade"></select></div>
+        <div class="fld"><label class="lbl">Catégorie</label>
+          <select class="sel" id="af-cat">
+            <option value="combat">Combat</option><option value="conduite">Conduite</option>
+            <option value="procedure">Procédure</option><option value="infiltration">Infiltration</option>
+            <option value="medical">Médical</option><option value="autre">Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="fld"><label class="lbl">Rôle Discord à attribuer après validation</label>
+        <select class="sel" id="af-role">
+          <option value="">— Aucun —</option>
+        </select>
+      </div>
+      <div class="fld"><label class="lbl">Description</label><textarea class="ta" id="af-desc" placeholder="Objectifs, prérequis, durée…"></textarea></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-gh" onclick="closeMo('addFormation')">Annuler</button>
+      <button class="btn btn-gold" onclick="submitFormation()">Créer formation</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov-addRole">
+  <div class="mo">
+    <div class="mh"><span class="mt">Associer un rôle Discord</span><button class="mc" onclick="closeMo('addRole')">×</button></div>
+    <div class="mb">
+      <div class="fld"><label class="lbl">Grade MDT</label><select class="sel" id="rl-grade"></select></div>
+      <div class="fld"><label class="lbl">ID du rôle Discord</label><input class="inp" id="rl-rid" placeholder="123456789012345678"></div>
+      <div class="fld"><label class="lbl">Nom du rôle (pour affichage)</label><input class="inp" id="rl-rname" placeholder="Ex : Soldat Cayo"></div>
+      <div class="fld"><label class="lbl">Couleur (hex)</label><input class="inp" id="rl-color" placeholder="#c9a84c" type="color" value="#c9a84c"></div>
+      <div style="background:var(--gold-dim);border:1px solid var(--gold-mid);border-radius:var(--r);padding:10px;font-size:11px;color:var(--gold)">
+        Quand un membre reçoit ce grade MDT, le bot Discord lui attribuera automatiquement ce rôle (et retirera les anciens grades).
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-gh" onclick="closeMo('addRole')">Annuler</button>
+      <button class="btn btn-gold" onclick="submitRoleLink()">Associer</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov-addWh">
+  <div class="mo">
+    <div class="mh"><span class="mt">Ajouter un webhook</span><button class="mc" onclick="closeMo('addWh')">×</button></div>
+    <div class="mb">
+      <div class="fld"><label class="lbl">Nom</label><input class="inp" id="whn-nom" placeholder="Ex : Logs rapports"></div>
+      <div class="fld"><label class="lbl">URL Webhook Discord</label><input class="inp" id="whn-url" placeholder="https://discord.com/api/webhooks/…"></div>
+      <div class="fld"><label class="lbl">Événement</label>
+        <select class="sel" id="whn-ev">
+          <option>Rapports</option><option>Sanctions</option><option>Formations</option><option>Rôles</option><option>Général</option>
+        </select>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-gh" onclick="closeMo('addWh')">Annuler</button>
+      <button class="btn btn-gold" onclick="submitWh()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov-memberDetail">
+  <div class="mo mo-lg">
+    <div class="mh" id="mdHead"><span class="mt">Fiche membre</span><button class="mc" onclick="closeMo('memberDetail')">×</button></div>
+    <div class="mb" id="mdBody"></div>
+    <div class="mf"><button class="btn btn-gh" onclick="closeMo('memberDetail')">Fermer</button></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  STATE & CONFIG
+// ══════════════════════════════════════════════════════
+let LOGGED_IN = false;
+let setupStep = 1;
+const SETUP_STEPS = 5;
+let memberFilter = 'all';
+let reportFilter = 'all';
+
+// Config Discord (sera récupérée du backend en prod)
+let DISCORD_CFG = {
+  guildId: '',
+  clientId: '',
+  botToken: '',
+  botTag: 'MDT-BOT#0000',
+  botOnline: true,
+  webhooks: [
+    { nom:'Rapports',   url:'', ev:'Rapports',  on:true },
+    { nom:'Sanctions',  url:'', ev:'Sanctions', on:true },
+    { nom:'Formations', url:'', ev:'Formations',on:true },
+    { nom:'Général',    url:'', ev:'Général',   on:true },
+  ],
+};
+
+// Grades avec liaison rôle Discord
+let GRADES = [
+  { id:'recrue',      label:'Recrue',          color:'#5c6278', roleId:'',    roleName:'',     perm:0, cssClass:'g0' },
+  { id:'soldat',      label:'Soldat',           color:'#7a9fd4', roleId:'',    roleName:'',     perm:1, cssClass:'g1' },
+  { id:'caporal',     label:'Caporal',          color:'#b090e0', roleId:'',    roleName:'',     perm:2, cssClass:'g2' },
+  { id:'lieutenant',  label:'Lieutenant',       color:'#c9a84c', roleId:'',    roleName:'',     perm:3, cssClass:'g3' },
+  { id:'commandant',  label:'Commandant',       color:'#e07070', roleId:'',    roleName:'',     perm:4, cssClass:'g4' },
+];
+
+// Permissions MDT par grade
+let PERMS = {
+  recrue:     { viewReports:false, createReports:false, manageMembers:false, manageRoles:false, manageFormations:false, accessConfig:false },
+  soldat:     { viewReports:true,  createReports:true,  manageMembers:false, manageRoles:false, manageFormations:false, accessConfig:false },
+  caporal:    { viewReports:true,  createReports:true,  manageMembers:false, manageRoles:false, manageFormations:true,  accessConfig:false },
+  lieutenant: { viewReports:true,  createReports:true,  manageMembers:true,  manageRoles:false, manageFormations:true,  accessConfig:false },
+  commandant: { viewReports:true,  createReports:true,  manageMembers:true,  manageRoles:true,  manageFormations:true,  accessConfig:true  },
+};
+
+const PERM_LABELS = {
+  viewReports:'Voir rapports', createReports:'Créer rapports',
+  manageMembers:'Gérer membres', manageRoles:'Gérer rôles Discord',
+  manageFormations:'Gérer formations', accessConfig:'Configuration MDT'
+};
+
+// Types de rapports Milice Cayo
+let REPORT_TYPES = [
+  { id:'operation',     label:'Opération',       color:'#c9a84c' },
+  { id:'arrestation',   label:'Arrestation',     color:'#e07070' },
+  { id:'patrouille',    label:'Patrouille',      color:'#7a9fd4' },
+  { id:'incident',      label:'Incident',        color:'#c97a2d' },
+  { id:'infiltration',  label:'Infiltration',    color:'#b090e0' },
+  { id:'autre',         label:'Autre',           color:'#5c6278' },
+];
+
+// Rôles Discord (simulés — en prod viennent du bot)
+let discordRoles = [
+  { id:'111111111111111111', name:'Commandant Cayo',  color:'#e07070', memberCount:2 },
+  { id:'222222222222222222', name:'Lieutenant Cayo',  color:'#c9a84c', memberCount:3 },
+  { id:'333333333333333333', name:'Caporal Cayo',     color:'#b090e0', memberCount:4 },
+  { id:'444444444444444444', name:'Soldat Cayo',      color:'#7a9fd4', memberCount:7 },
+  { id:'555555555555555555', name:'Recrue Cayo',      color:'#5c6278', memberCount:5 },
+  { id:'666666666666666666', name:'Formé — Tir',      color:'#2d9e6b', memberCount:8 },
+  { id:'777777777777777777', name:'Formé — Conduite', color:'#2d6dc9', memberCount:6 },
+];
+
+// Membres (en prod: récupérés du serveur Discord via bot)
+let members = [
+  { id:1, discordId:'198765432101234567', username:'cobra_zero',   avatar:'CZ', nomRp:'J. Cobra',    grade:'commandant', status:'actif',    rapports:14, sanctions:0, notes:'Fondateur de la milice.' },
+  { id:2, discordId:'234567890123456789', username:'viper_actual',  avatar:'VA', nomRp:'M. Viper',    grade:'lieutenant', status:'actif',    rapports:9,  sanctions:0, notes:'' },
+  { id:3, discordId:'345678901234567890', username:'ghost_21',      avatar:'G2', nomRp:'A. Ghost',    grade:'caporal',    status:'actif',    rapports:6,  sanctions:1, notes:'' },
+  { id:4, discordId:'456789012345678901', username:'fury_delta',    avatar:'FD', nomRp:'R. Fury',     grade:'soldat',     status:'actif',    rapports:4,  sanctions:0, notes:'' },
+  { id:5, discordId:'567890123456789012', username:'novo_recruit',  avatar:'NR', nomRp:'L. Novo',     grade:'recrue',     status:'actif',    rapports:1,  sanctions:0, notes:'En formation initiale.' },
+  { id:6, discordId:'678901234567890123', username:'shadow_09',     avatar:'S0', nomRp:'D. Shadow',   grade:'soldat',     status:'suspendu', rapports:3,  sanctions:2, notes:'Suspension 7j — comportement.' },
+  { id:7, discordId:'789012345678901234', username:'kilo_force',    avatar:'KF', nomRp:'P. Kilo',     grade:'caporal',    status:'actif',    rapports:7,  sanctions:0, notes:'' },
+  { id:8, discordId:'890123456789012345', username:'bravo_six',     avatar:'B6', nomRp:'T. Bravo',    grade:'soldat',     status:'actif',    rapports:5,  sanctions:0, notes:'' },
+  { id:9, discordId:'901234567890123456', username:'echo_lima',     avatar:'EL', nomRp:'S. Echo',     grade:'lieutenant', status:'actif',    rapports:11, sanctions:0, notes:'' },
+  { id:10,discordId:'012345678901234567', username:'tango_recon',   avatar:'TR', nomRp:'N. Tango',    grade:'recrue',     status:'exclu',    rapports:0,  sanctions:3, notes:'Exclusion définitive.' },
+];
+
+// Membre courant (simulé — en prod viendra du JWT Discord)
+let currentUser = { id:1, discordId:'198765432101234567', username:'cobra_zero', avatar:'CZ', nomRp:'J. Cobra', grade:'commandant' };
+
+let reports = [
+  { id:'OP-0012', type:'operation',   titre:'Prise de position — Zone Est',       desc:'Opération coordonnée sur la zone est. Neutralisation de 3 positions ennemies. Aucune perte.', agent:'J. Cobra', date:'2025-03-29', time:'14:32' },
+  { id:'OP-0011', type:'infiltration',titre:'Infiltration — Entrepôt Nord',        desc:'Mission d\'infiltration réussie. Récupération de renseignements stratégiques.', agent:'M. Viper', date:'2025-03-29', time:'11:15' },
+  { id:'OP-0010', type:'patrouille',  titre:'Patrouille périmètre — Secteur B',    desc:'Patrouille de sécurisation. RAS. 4 véhicules vérifiés.', agent:'A. Ghost', date:'2025-03-28', time:'23:00' },
+  { id:'OP-0009', type:'incident',    titre:'Accrochage — Route 68',               desc:'Contact ennemi sur la route 68. 1 blessé léger. Repli ordonné.', agent:'P. Kilo', date:'2025-03-28', time:'16:45' },
+  { id:'OP-0008', type:'arrestation', titre:'Capture — Informateur ennemi',        desc:'Neutralisation et capture d\'un informateur ennemi. Interrogatoire en cours.', agent:'S. Echo', date:'2025-03-27', time:'22:10' },
+  { id:'OP-0007', type:'operation',   titre:'Assaut — Poste de contrôle',          desc:'Assaut réussi sur poste de contrôle adverse. Zone sécurisée en 12 minutes.', agent:'J. Cobra', date:'2025-03-27', time:'09:30' },
+];
+
+let formations = [
+  { id:1, nom:'Tir longue portée',    desc:'Précision, stabilisation, munitions spéciales.', grade:'soldat',    cat:'combat',       icon:'🎯', roleId:'666666666666666666', assigned:5 },
+  { id:2, nom:'Conduite offensive',   desc:'Conduite rapide, manœuvres évasives, convois.', grade:'recrue',    cat:'conduite',     icon:'🚗', roleId:'777777777777777777', assigned:7 },
+  { id:3, nom:'Procédures d\'assaut', desc:'Techniques CQB, sécurisation, extraction.', grade:'caporal',   cat:'combat',       icon:'🛡️', roleId:'', assigned:3 },
+  { id:4, nom:'Infiltration',         desc:'Approche silencieuse, neutralisation discrète.', grade:'lieutenant',cat:'infiltration',  icon:'🔦', roleId:'', assigned:2 },
+  { id:5, nom:'Secourisme tactique',  desc:'Soins sous feu, évacuation de blessés.', grade:'recrue',    cat:'medical',      icon:'🏥', roleId:'', assigned:8 },
+];
+
+let assignments = [
+  { member:'L. Novo',   formation:'Conduite offensive',  date:'2025-03-25', validateur:'M. Viper', statut:'pending' },
+  { member:'D. Shadow', formation:'Tir longue portée',   date:'2025-03-24', validateur:'J. Cobra', statut:'validated' },
+  { member:'T. Bravo',  formation:'Procédures d\'assaut',date:'2025-03-22', validateur:'S. Echo',  statut:'pending' },
+  { member:'B. Six',    formation:'Secourisme tactique', date:'2025-03-20', validateur:'M. Viper', statut:'refused' },
+];
+
+let notifications = [
+  { id:1, icon:'⚔️', title:'Rapport opérationnel soumis', desc:'J. Cobra a soumis OP-0012 — Prise de position.', time:'Il y a 5 min', unread:true },
+  { id:2, icon:'🔑', title:'Rôle Discord attribué', desc:'M. Viper — Rôle "Lieutenant Cayo" attribué.', time:'Il y a 32 min', unread:true },
+  { id:3, icon:'⚠️', title:'Sanction enregistrée', desc:'D. Shadow suspendu 7 jours.', time:'Il y a 1 h', unread:true },
+  { id:4, icon:'🎓', title:'Formation validée', desc:'D. Shadow — Tir longue portée certifié.', time:'Il y a 2 h', unread:false },
+  { id:5, icon:'🤖', title:'Bot Discord synchronisé', desc:'247 membres récupérés. 7 rôles mis à jour.', time:'Il y a 3 h', unread:false },
+];
+
+let feedData = [
+  { color:'#c9a84c', text:'<strong>J. Cobra</strong> a soumis le rapport <strong>OP-0012</strong> — Opération zone est', time:'Il y a 5 min' },
+  { color:'#2d9e6b', text:'<strong>M. Viper</strong> a reçu le rôle Discord <strong>Lieutenant Cayo</strong>', time:'Il y a 32 min' },
+  { color:'#c97a2d', text:'Sanction appliquée — <strong>D. Shadow</strong> suspendu 7 jours', time:'Il y a 1 h' },
+  { color:'#b090e0', text:'<strong>T. Bravo</strong> assigné à la formation <strong>Procédures d\'assaut</strong>', time:'Il y a 2 h' },
+  { color:'#2d9e6b', text:'Bot Discord synchronisé — <strong>7 rôles</strong> mis à jour', time:'Il y a 3 h' },
+];
+
+const ACCENT_PRESETS = [
+  { name:'Or Cayo',   val:'#c9a84c' },
+  { name:'Bleu',      val:'#3b82f6' },
+  { name:'Vert',      val:'#22c55e' },
+  { name:'Rouge',     val:'#ef4444' },
+  { name:'Violet',    val:'#a78bfa' },
+  { name:'Orange',    val:'#f97316' },
+  { name:'Cyan',      val:'#06b6d4' },
+  { name:'Rose',      val:'#ec4899' },
+];
+
+// ── CLOCK ──
+function tick(){
+  const n=new Date(),p=v=>String(v).padStart(2,'0');
+  document.getElementById('clock').textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+}
+setInterval(tick,1000);tick();
+
+// ── LOGIN ──
+function doLogin(){
+  // En production: window.location.href = '/api/auth/discord';
+  // Simulation:
+  document.getElementById('loginScreen').style.opacity='0';
+  document.getElementById('loginScreen').style.transition='opacity 0.4s';
+  setTimeout(()=>{
+    document.getElementById('loginScreen').style.display='none';
+    // Vérifier si premier lancement
+    if(!localStorage.getItem('mdt_configured')){
+      document.getElementById('setupScreen').style.display='flex';
+      renderSetupStep();
+    } else {
+      launchApp();
+    }
+  },400);
+}
+
+// ── SETUP WIZARD ──
+function renderSetupStep(){
+  for(let i=1;i<=SETUP_STEPS;i++){
+    document.getElementById('step'+i)?.classList.toggle('on',i===setupStep);
+  }
+  document.getElementById('setupPf').style.width=`${(setupStep/SETUP_STEPS)*100}%`;
+  document.getElementById('setupStepLabel').textContent=`${setupStep} / ${SETUP_STEPS}`;
+  document.getElementById('setupBack').style.visibility=setupStep>1?'visible':'hidden';
+  const nx=document.getElementById('setupNext');
+  nx.textContent=setupStep===SETUP_STEPS?'Lancer le MDT →':'Suivant →';
+
+  if(setupStep===2) renderGradeRoleSetup();
+  if(setupStep===3) renderPermSetup();
+  if(setupStep===5) renderSetupSummary();
+}
+
+function renderGradeRoleSetup(){
+  const el=document.getElementById('gradeRoleMap');
+  if(!el)return;
+  el.innerHTML=GRADES.map((g,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;background:var(--bg-3);padding:10px;border-radius:var(--r);border:1px solid var(--border)">
+      <div style="width:10px;height:10px;border-radius:50%;background:${g.color};flex-shrink:0"></div>
+      <span style="min-width:100px;font-size:12px;font-weight:600">${g.label}</span>
+      <span style="color:var(--text-2);font-size:11px">→</span>
+      <input class="inp" style="flex:1;font-size:11px;padding:5px 8px" placeholder="ID du rôle Discord" value="${g.roleId}"
+        oninput="GRADES[${i}].roleId=this.value">
+      <input class="inp" style="width:140px;font-size:11px;padding:5px 8px" placeholder="Nom du rôle"
+        value="${g.roleName}" oninput="GRADES[${i}].roleName=this.value">
+    </div>`).join('');
+}
+
+function renderPermSetup(){
+  const el=document.getElementById('permMatrix');
+  if(!el)return;
+  const permKeys=Object.keys(PERM_LABELS);
+  el.innerHTML=`
+    <div class="perm-row" style="background:var(--bg-3)">
+      <div class="perm-cell hd">Grade</div>
+      ${permKeys.map(k=>`<div class="perm-cell hd" style="font-size:8px;padding:6px 4px;text-align:center">${PERM_LABELS[k]}</div>`).join('')}
+    </div>
+    ${GRADES.map(g=>`
+    <div class="perm-row">
+      <div class="perm-cell">
+        <span class="gtag ${g.cssClass}">${g.label}</span>
+      </div>
+      ${permKeys.map(k=>`
+      <div class="perm-cell perm-check">
+        <input type="checkbox" ${PERMS[g.id]?.[k]?'checked':''} 
+          onchange="PERMS['${g.id}']['${k}']=this.checked">
+      </div>`).join('')}
+    </div>`).join('')}`;
+}
+
+function renderSetupSummary(){
+  const el=document.getElementById('setupSummary');
+  if(!el)return;
+  el.innerHTML=`
+    <div style="color:var(--gold)">✓ ${GRADES.filter(g=>g.roleId).length}/${GRADES.length} grades liés à des rôles Discord</div>
+    <div style="color:var(--text-1)">✓ ${Object.keys(PERMS).length} grades configurés avec permissions</div>
+    <div style="color:var(--text-1)">✓ Webhooks: ${[document.getElementById('wh-r'),document.getElementById('wh-s'),document.getElementById('wh-f'),document.getElementById('wh-g')].filter(e=>e?.value).length}/4 configurés</div>
+    <div style="margin-top:8px;color:var(--text-2);font-size:10px">─── Fichier .env généré ───</div>
+    <div>DISCORD_BOT_TOKEN=${document.getElementById('s-token')?.value?'[MASQUÉ]':'[VIDE]'}</div>
+    <div>DISCORD_CLIENT_ID=${document.getElementById('s-cid')?.value||'[VIDE]'}</div>
+    <div>DISCORD_GUILD_ID=${document.getElementById('s-gid')?.value||'[VIDE]'}</div>
+    <div>WEBHOOK_RAPPORTS=${document.getElementById('wh-r')?.value?'[DÉFINI]':'[VIDE]'}</div>`;
+}
+
+function setupNext(){
+  if(setupStep<SETUP_STEPS){ setupStep++; renderSetupStep(); }
+  else { finishSetup(); }
+}
+function setupPrev(){ if(setupStep>1){ setupStep--; renderSetupStep(); } }
+function finishSetup(){
+  localStorage.setItem('mdt_configured','1');
+  document.getElementById('setupScreen').style.display='none';
+  launchApp();
+}
+
+function launchApp(){
+  document.getElementById('appShell').style.display='flex';
+  renderAll();
+  setTimeout(()=>toast('Milice Cayo MDT','Session active · ' + currentUser.nomRp,'s'),500);
+  // En prod: initialiser connexion WebSocket bot ici
+  initBotSimulation();
+}
+
+// ── NAVIGATION ──
+function navigate(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-i').forEach(n=>n.classList.remove('on'));
+  document.getElementById('page-'+id)?.classList.add('on');
+  document.querySelector(`[data-p="${id}"]`)?.classList.add('on');
+  document.getElementById('bcCur').textContent=id;
+  if(id==='profil') renderProfil();
+}
+document.querySelectorAll('.nav-i[data-p]').forEach(el=>{
+  el.addEventListener('click',()=>navigate(el.dataset.p));
+});
+
+// ── RENDER ALL ──
+function renderAll(){
+  updateSidebar();
+  updateKpis();
+  renderFeed();
+  renderGradeBarsChart();
+  renderMembers();
+  renderReportFilters();
+  renderReports();
+  renderFormations();
+  renderDiscordRoles();
+  renderGradeRoleLinks();
+  renderMemberRoleTable();
+  renderPermTable();
+  renderRoleAccessMap();
+  renderNotifications();
+  renderConfig();
+  fillSelects();
+}
+
+function updateSidebar(){
+  document.getElementById('sbName').textContent=currentUser.nomRp;
+  document.getElementById('sbGrade').textContent=gradeLabel(currentUser.grade).toUpperCase();
+  document.getElementById('sbAvatar').textContent=currentUser.avatar;
+  document.getElementById('botTag').textContent=DISCORD_CFG.botTag;
+  document.getElementById('botDot').style.background=DISCORD_CFG.botOnline?'var(--green)':'var(--red)';
+}
+
+function updateKpis(){
+  document.getElementById('kMem').textContent=members.filter(m=>m.status==='actif').length;
+  document.getElementById('kRep').textContent=reports.length;
+  document.getElementById('kForm').textContent=assignments.filter(a=>a.statut==='validated').length;
+  document.getElementById('kFormPend').textContent=assignments.filter(a=>a.statut==='pending').length;
+  document.getElementById('kRoles').textContent=discordRoles.length;
+  document.getElementById('navMemCount').textContent=members.filter(m=>m.status==='actif').length;
+  document.getElementById('navRepCount').textContent=reports.length;
+  const unread=notifications.filter(n=>n.unread).length;
+  document.getElementById('navNotifCount').textContent=unread;
+  document.getElementById('notifDot').style.display=unread?'':'none';
+}
+
+function renderFeed(){
+  const el=document.getElementById('feedCt');if(!el)return;
+  el.innerHTML=feedData.map(f=>`
+    <div class="fi">
+      <div class="fd" style="background:${f.color}"></div>
+      <div class="fb"><div class="ft">${f.text}</div><div class="fts">${f.time}</div></div>
+    </div>`).join('');
+}
+
+function renderGradeBarsChart(){
+  const el=document.getElementById('gradeBars');if(!el)return;
+  el.innerHTML=GRADES.map(g=>{
+    const c=members.filter(m=>m.grade===g.id).length;
+    const pct=members.length?Math.round(c/members.length*100):0;
+    return `<div>
+      <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-bottom:3px">
+        <span style="color:var(--text-1);font-family:var(--mono)">${g.label}</span>
+        <span style="color:${g.color};font-family:var(--mono)">${c}</span>
+      </div>
+      <div class="prog"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function gradeLabel(id){ return GRADES.find(g=>g.id===id)?.label||id; }
+function gradeClass(id){ return GRADES.find(g=>g.id===id)?.cssClass||'g0'; }
+function gradeColor(id){ return GRADES.find(g=>g.id===id)?.color||'#5c6278'; }
+function rtColor(id){ return REPORT_TYPES.find(t=>t.id===id)?.color||'#5c6278'; }
+function rtLabel(id){ return REPORT_TYPES.find(t=>t.id===id)?.label||id; }
+
+function statusTag(s){
+  const m={actif:['tg','Actif'],suspendu:['to','Suspendu'],exclu:['tr2','Exclu']};
+  const[cls,l]=m[s]||['tm',s];return `<span class="tag ${cls}">${l}</span>`;
+}
+
+function renderMembers(){
+  const tb=document.getElementById('memTbody');if(!tb)return;
+  const list=memberFilter==='all'?members:members.filter(m=>m.status===memberFilter);
+  tb.innerHTML=list.map(m=>{
+    const g=GRADES.find(gr=>gr.id===m.grade);
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:9px">
+          <div class="av" style="font-size:9px">${m.avatar}</div>
+          <div>
+            <div style="font-size:12.5px;font-weight:600">${m.nomRp}</div>
+            <div style="font-size:10px;font-family:var(--mono);color:var(--text-2)">@${m.username}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="gtag ${gradeClass(m.grade)}">${gradeLabel(m.grade)}</span></td>
+      <td>
+        ${g?.roleId?`<div style="display:flex;align-items:center;gap:5px">
+          <div class="cdot" style="background:${g.color}"></div>
+          <span style="font-size:11px;font-family:var(--mono);color:var(--text-1)">${g.roleName||'Rôle #'+g.roleId.slice(-4)}</span>
+        </div>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}
+      </td>
+      <td>${statusTag(m.status)}</td>
+      <td style="font-family:var(--mono);color:var(--gold);font-size:12px">${m.rapports}</td>
+      <td style="font-family:var(--mono);font-size:12px;color:${m.sanctions>0?'var(--red)':'var(--text-2)'}">
+        ${m.sanctions>0?'⚠ '+m.sanctions:'—'}
+      </td>
+      <td>
+        <div style="display:flex;gap:5px">
+          <button class="btn btn-gh btn-xs" onclick="viewMember(${m.id})">Fiche</button>
+          <button class="btn btn-w btn-xs" onclick="promoteMember(${m.id})">↑</button>
+          <button class="btn btn-d btn-xs" onclick="sanctionMember(${m.id})">⚑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderReportFilters(){
+  const el=document.getElementById('repFilters');if(!el)return;
+  el.innerHTML=`<button class="btn btn-gh btn-xs${reportFilter==='all'?' on-filter':''}" onclick="filterRep(this,'all')">Tous</button>`+
+    REPORT_TYPES.map(t=>`<button class="btn btn-gh btn-xs${reportFilter===t.id?' on-filter':''}" onclick="filterRep(this,'${t.id}')">${t.label}</button>`).join('');
+}
+function filterRep(el,f){
+  reportFilter=f;
+  document.querySelectorAll('#repFilters .btn').forEach(b=>b.classList.remove('on-filter'));
+  el.classList.add('on-filter');
+  renderReports();
+}
+
+function renderReports(){
+  const el=document.getElementById('repList');if(!el)return;
+  const list=reportFilter==='all'?reports:reports.filter(r=>r.type===reportFilter);
+  if(!list.length){el.innerHTML='<div style="padding:30px;text-align:center;color:var(--text-3);font-size:12px">Aucun rapport</div>';return;}
+  el.innerHTML=list.map(r=>`
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 15px;border-bottom:1px solid var(--border);transition:var(--tr);cursor:pointer"
+      onmouseover="this.style.background='rgba(255,255,255,0.015)'" onmouseout="this.style.background=''"
+    >
+      <div style="width:3px;border-radius:2px;align-self:stretch;min-height:40px;background:${rtColor(r.type)};flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:10px;font-family:var(--mono);color:var(--text-3);margin-bottom:2px">${r.id}</div>
+        <div style="font-size:12.5px;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.titre}</div>
+        <div style="font-size:11px;color:var(--text-2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${r.desc}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:5px">
+          <span class="tag ${rtTagClass(r.type)}" style="font-size:9px">${rtLabel(r.type)}</span>
+          <span style="font-size:10px;font-family:var(--mono);color:var(--text-3)">${r.agent}</span>
+          <span style="font-size:10px;font-family:var(--mono);color:var(--text-3)">${r.date} · ${r.time}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:5px;flex-shrink:0;padding-top:2px">
+        <button class="btn btn-gh btn-xs" onclick="event.stopPropagation();exportPDF('${r.id}')">PDF</button>
+        <button class="btn btn-d btn-xs" onclick="event.stopPropagation();deleteReport('${r.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function rtTagClass(t){const m={operation:'tm',arrestation:'tr2',patrouille:'tb',incident:'to',infiltration:'tm',autre:'tm'};return m[t]||'tm';}
+
+function renderFormations(){
+  const g=document.getElementById('formGrid');if(!g)return;
+  g.innerHTML=formations.map(f=>`
+    <div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--rlg);padding:14px;transition:var(--tr)"
+      onmouseover="this.style.borderColor='var(--border-md)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:20px;margin-bottom:10px">${f.icon}</div>
+      <div style="font-size:12.5px;font-weight:600;margin-bottom:4px">${f.nom}</div>
+      <div style="font-size:11px;color:var(--text-2);margin-bottom:10px;line-height:1.5">${f.desc}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
+        <span class="tag tm" style="font-size:9px">${f.cat}</span>
+        <span class="tag ${gradeClass(f.grade)}" style="font-size:9px;border-color:${gradeColor(f.grade)}33;color:${gradeColor(f.grade)};background:${gradeColor(f.grade)}15">${gradeLabel(f.grade)}+</span>
+        ${f.roleId?`<span class="tag tg" style="font-size:9px">🔑 Rôle auto</span>`:''}
+      </div>
+      <div style="font-size:10px;font-family:var(--mono);color:var(--text-2);margin-bottom:10px">${f.assigned} membres · ${assignments.filter(a=>a.formation===f.nom).length} assignations</div>
+      <button class="btn btn-gh btn-xs" style="width:100%;justify-content:center" onclick="assignFormation(${f.id})">Assigner un membre</button>
+    </div>`).join('');
+
+  const tb=document.getElementById('assignTb');if(!tb)return;
+  tb.innerHTML=assignments.map((a,i)=>`
+    <tr>
+      <td style="font-weight:500;font-size:12px">${a.member}</td>
+      <td style="font-size:12px;color:var(--text-1)">${a.formation}</td>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--text-3)">${a.date}</td>
+      <td style="font-size:12px;color:var(--text-2)">${a.validateur}</td>
+      <td>${assignTag(a.statut)}</td>
+      <td><div style="display:flex;gap:5px">
+        ${a.statut==='pending'?`<button class="btn btn-s btn-xs" onclick="validateAssign(${i})">✓</button>
+        <button class="btn btn-d btn-xs" onclick="refuseAssign(${i})">✕</button>`:'<span style="color:var(--text-3);font-size:11px">—</span>'}
+      </div></td>
+    </tr>`).join('');
+}
+
+function assignTag(s){const m={pending:['to','En attente'],validated:['tg','Validée'],refused:['tr2','Refusée']};const[c,l]=m[s]||['tm',s];return`<span class="tag ${c}">${l}</span>`;}
+
+function renderDiscordRoles(){
+  const el=document.getElementById('discordRoles');if(!el)return;
+  el.innerHTML=discordRoles.map(r=>`
+    <div class="role-row">
+      <div class="role-dot" style="background:${r.color}"></div>
+      <div class="role-name">${r.name}</div>
+      <div class="role-count">${r.memberCount} membres</div>
+      <div class="role-id mono" style="font-size:10px">${r.id.slice(-6)}</div>
+    </div>`).join('');
+}
+
+function renderGradeRoleLinks(){
+  const el=document.getElementById('gradeRoleLinks');if(!el)return;
+  el.innerHTML=GRADES.map((g,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 15px;border-bottom:1px solid var(--border)">
+      <span class="gtag ${g.cssClass}" style="min-width:90px">${g.label}</span>
+      <span style="color:var(--text-3);font-size:11px">→</span>
+      <select class="sel" style="flex:1;font-size:11px;padding:4px 8px"
+        onchange="GRADES[${i}].roleId=this.value;GRADES[${i}].roleName=this.options[this.selectedIndex].text">
+        <option value="">— Non lié —</option>
+        ${discordRoles.map(r=>`<option value="${r.id}" ${g.roleId===r.id?'selected':''}>${r.name}</option>`).join('')}
+      </select>
+      <div class="cdot" style="background:${g.color}"></div>
+    </div>`).join('');
+}
+
+function renderMemberRoleTable(){
+  const tb=document.getElementById('memberRoleTb');if(!tb)return;
+  tb.innerHTML=members.map(m=>{
+    const g=GRADES.find(gr=>gr.id===m.grade);
+    const linkedRole=discordRoles.find(r=>r.id===g?.roleId);
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="av" style="font-size:9px">${m.avatar}</div>
+          <span style="font-size:12px;font-weight:500">${m.nomRp}</span>
+        </div>
+      </td>
+      <td style="font-family:var(--mono);font-size:10.5px;color:var(--text-2)">@${m.username}</td>
+      <td>
+        ${linkedRole?`<div style="display:flex;align-items:center;gap:5px">
+          <div class="cdot" style="background:${linkedRole.color}"></div>
+          <span style="font-size:11.5px">${linkedRole.name}</span>
+        </div>`:'<span style="color:var(--text-3);font-size:11px">Aucun rôle lié</span>'}
+      </td>
+      <td><span class="gtag ${gradeClass(m.grade)}">${gradeLabel(m.grade)}</span></td>
+      <td>
+        <div style="display:flex;gap:5px">
+          <button class="btn btn-gh btn-xs" onclick="giveRole(${m.id})" ${!g?.roleId?'disabled style="opacity:0.4"':''}>Attribuer rôle</button>
+          <button class="btn btn-w btn-xs" onclick="promoteMember(${m.id})">↑ Grade</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderPermTable(){
+  const el=document.getElementById('permTable');if(!el)return;
+  const keys=Object.keys(PERM_LABELS);
+  el.innerHTML=`
+    <div class="perm-row" style="background:var(--bg-3)">
+      <div class="perm-cell hd" style="padding:10px 13px">Permission</div>
+      ${GRADES.map(g=>`<div class="perm-cell hd" style="text-align:center;padding:6px 4px"><span class="gtag ${g.cssClass}" style="font-size:8px">${g.label}</span></div>`).join('')}
+    </div>
+    ${keys.map(k=>`
+    <div class="perm-row">
+      <div class="perm-cell" style="font-size:12px;color:var(--text-1)">${PERM_LABELS[k]}</div>
+      ${GRADES.map(g=>`
+      <div class="perm-cell perm-check">
+        <input type="checkbox" ${PERMS[g.id]?.[k]?'checked':''}
+          onchange="PERMS['${g.id}']['${k}']=this.checked">
+      </div>`).join('')}
+    </div>`).join('')}`;
+}
+
+function renderRoleAccessMap(){
+  const el=document.getElementById('roleAccessMap');if(!el)return;
+  el.innerHTML=GRADES.map(g=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="cdot" style="background:${g.color}"></div>
+        <span class="gtag ${g.cssClass}" style="font-size:10px">${g.label}</span>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
+        ${Object.entries(PERMS[g.id]||{}).filter(([,v])=>v).map(([k])=>`<span style="font-size:9px;font-family:var(--mono);color:var(--text-2);background:var(--bg-4);padding:1px 5px;border-radius:3px">${k}</span>`).join('')||'<span style="font-size:10px;color:var(--text-3)">Aucun accès</span>'}
+      </div>
+    </div>`).join('');
+
+  const ar=document.getElementById('allowedRoles');if(!ar)return;
+  ar.innerHTML=GRADES.map((g,i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="cdot" style="background:${g.color}"></div>
+        <span style="font-size:12px">${g.label} ${g.roleName?'('+g.roleName+')':''}</span>
+      </div>
+      <label class="tog"><input type="checkbox" ${g.perm>=0?'checked':''} onchange="GRADES[${i}].allowed=this.checked">
+        <span class="ttr"></span></label>
+    </div>`).join('');
+}
+
+function renderNotifications(){
+  const el=document.getElementById('notifCt');if(!el)return;
+  el.innerHTML=notifications.map(n=>`
+    <div onclick="readNotif(${n.id})" style="display:flex;gap:10px;padding:11px 15px;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--tr);border-left:2px solid ${n.unread?'var(--gold)':'transparent'};background:${n.unread?'var(--gold-dim)':''}"
+      onmouseover="this.style.background='rgba(255,255,255,0.015)'" onmouseout="this.style.background='${n.unread?'var(--gold-dim)':''}'"
+    >
+      <div style="font-size:15px;flex-shrink:0;padding-top:1px">${n.icon}</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600;margin-bottom:2px">${n.title}</div>
+        <div style="font-size:11px;color:var(--text-2)">${n.desc}</div>
+      </div>
+      <div style="font-size:10px;font-family:var(--mono);color:var(--text-3);white-space:nowrap">${n.time}</div>
+    </div>`).join('');
+  updateKpis();
+}
+
+function renderConfig(){
+  // Bot status
+  const cb=document.getElementById('cfgBot');if(cb){
+    cb.innerHTML=`
+      <div class="fld"><label class="lbl">Token Bot (masqué)</label><input class="inp" type="password" value="●●●●●●●●●●●●●●●●●●●●" readonly></div>
+      <div class="fld"><label class="lbl">Guild ID</label><input class="inp" id="cfg-gid" value="${DISCORD_CFG.guildId||''}" placeholder="ID du serveur Discord"></div>
+      <div class="fld"><label class="lbl">Client ID</label><input class="inp" value="${DISCORD_CFG.clientId||''}" placeholder="ID de l'application"></div>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-gold btn-sm" style="flex:1;justify-content:center" onclick="saveDiscordConfig()">Sauvegarder</button>
+        <button class="btn btn-gh btn-sm" onclick="testBot()">Test bot</button>
+      </div>`;
+  }
+  // Webhooks
+  const cw=document.getElementById('cfgWebhooks');if(cw){
+    cw.innerHTML=DISCORD_CFG.webhooks.map((w,i)=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 15px;border-bottom:1px solid var(--border);font-size:12px">
+        <div>
+          <div style="font-weight:500">${w.nom}</div>
+          <div style="font-size:10px;font-family:var(--mono);color:var(--text-3)">${w.ev} · ${w.url||'Non configuré'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="tag ${w.on&&w.url?'tg':'tm'}">${w.on&&w.url?'Actif':'Inactif'}</span>
+          <label class="tog"><input type="checkbox" ${w.on?'checked':''} onchange="DISCORD_CFG.webhooks[${i}].on=this.checked;renderConfig()">
+            <span class="ttr"></span></label>
+        </div>
+      </div>`).join('');
+  }
+  // Security
+  const cs=document.getElementById('cfgSecurity');if(cs){
+    cs.innerHTML=`
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px">
+        <div><div style="font-weight:500">Durée de session</div><div style="font-size:10px;color:var(--text-2)">JWT expiration</div></div>
+        <select class="sel" style="width:100px;font-size:11px;padding:4px 8px">
+          <option>8 heures</option><option>24 heures</option><option>7 jours</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px">
+        <div><div style="font-weight:500">Logs de sécurité</div><div style="font-size:10px;color:var(--text-2)">Journal des accès</div></div>
+        <label class="tog"><input type="checkbox" checked><span class="ttr"></span></label>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px">
+        <div><div style="font-weight:500">Sync auto Discord</div><div style="font-size:10px;color:var(--text-2)">Toutes les 5 min</div></div>
+        <label class="tog"><input type="checkbox" checked><span class="ttr"></span></label>
+      </div>
+      <div style="margin-top:8px;padding-top:10px;border-top:1px solid var(--border)">
+        <button class="btn btn-d btn-sm" onclick="revokeAll()">Révoquer toutes les sessions</button>
+      </div>`;
+  }
+  // Accents
+  const ca=document.getElementById('cfgAccents');if(ca){
+    ca.innerHTML=ACCENT_PRESETS.map(p=>`
+      <div title="${p.name}" onclick="applyAccent('${p.val}')"
+        style="width:22px;height:22px;border-radius:4px;background:${p.val};cursor:pointer;border:2px solid transparent;transition:var(--tr)"
+        onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform=''">
+      </div>`).join('');
+  }
+}
+
+function renderProfil(){
+  const el=document.getElementById('profilCard');if(!el)return;
+  const m=members.find(x=>x.id===currentUser.id)||currentUser;
+  const g=GRADES.find(gr=>gr.id===m.grade);
+  el.innerHTML=`
+    <div class="ch"><div class="ct">Informations</div></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="av" style="width:52px;height:52px;font-size:16px">${m.avatar||currentUser.avatar}</div>
+        <div>
+          <div style="font-size:18px;font-weight:700">${m.nomRp||currentUser.nomRp}</div>
+          <div style="font-size:11px;font-family:var(--mono);color:var(--text-2)">@${m.username||currentUser.username}</div>
+          <div style="margin-top:5px;display:flex;gap:6px">
+            <span class="gtag ${gradeClass(m.grade)}">${gradeLabel(m.grade)}</span>
+            ${statusTag(m.status||'actif')}
+          </div>
+        </div>
+      </div>
+      <div class="sep"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div style="font-size:9.5px;font-weight:600;color:var(--text-3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px">ID Discord</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--gold)">${m.discordId||currentUser.discordId}</div></div>
+        <div><div style="font-size:9.5px;font-weight:600;color:var(--text-3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px">Rapports</div>
+          <div style="font-family:var(--mono);font-size:20px;font-weight:300">${m.rapports||0}</div></div>
+        <div><div style="font-size:9.5px;font-weight:600;color:var(--text-3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px">Rôle Discord</div>
+          <div style="font-size:11.5px;color:${g?.color||'var(--text-2)'}">${g?.roleName||'Non lié'}</div></div>
+        <div><div style="font-size:9.5px;font-weight:600;color:var(--text-3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px">Sanctions</div>
+          <div style="font-family:var(--mono);font-size:20px;font-weight:300;color:${(m.sanctions||0)>0?'var(--red)':'var(--text-2)'}">${m.sanctions||0}</div></div>
+      </div>
+      ${m.notes?`<div style="background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r);padding:10px;font-size:11.5px;color:var(--text-1);line-height:1.6">${m.notes}</div>`:''}
+    </div>`;
+}
+
+function viewMember(id){
+  const m=members.find(x=>x.id===id);if(!m)return;
+  const g=GRADES.find(gr=>gr.id===m.grade);
+  document.getElementById('mdHead').innerHTML=`<span class="mt">Fiche — ${m.nomRp}</span><button class="mc" onclick="closeMo('memberDetail')">×</button>`;
+  document.getElementById('mdBody').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <div class="av" style="width:44px;height:44px;font-size:14px">${m.avatar}</div>
+      <div>
+        <div style="font-size:16px;font-weight:700">${m.nomRp}</div>
+        <div style="font-size:11px;font-family:var(--mono);color:var(--text-2)">@${m.username} · ${m.discordId}</div>
+        <div style="margin-top:5px;display:flex;gap:5px">
+          <span class="gtag ${gradeClass(m.grade)}">${gradeLabel(m.grade)}</span>
+          ${statusTag(m.status)}
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div><div class="lbl">Rôle Discord actuel</div>
+        <div style="margin-top:4px;display:flex;align-items:center;gap:6px">
+          ${g?.roleName?`<div class="cdot" style="background:${g.color}"></div><span style="font-size:12px">${g.roleName}</span>`:'<span style="color:var(--text-3);font-size:12px">Non lié</span>'}
+        </div></div>
+      <div><div class="lbl">Rapports soumis</div><div style="font-family:var(--mono);font-size:24px;font-weight:300;margin-top:2px">${m.rapports}</div></div>
+      <div><div class="lbl">Sanctions</div><div style="font-family:var(--mono);font-size:24px;font-weight:300;color:${m.sanctions>0?'var(--red)':'var(--text-2)'};margin-top:2px">${m.sanctions}</div></div>
+    </div>
+    <div class="fld"><div class="lbl">Notes internes</div><div style="font-size:12px;color:var(--text-1);line-height:1.6;margin-top:4px">${m.notes||'Aucune note.'}</div></div>
+    <div style="display:flex;gap:8px;padding-top:4px;border-top:1px solid var(--border)">
+      <button class="btn btn-w" style="flex:1;justify-content:center" onclick="promoteMember(${m.id});closeMo('memberDetail')">↑ Promouvoir</button>
+      <button class="btn btn-d" style="flex:1;justify-content:center" onclick="sanctionMember(${m.id});closeMo('memberDetail')">⚑ Sanctionner</button>
+      <button class="btn btn-gold" style="flex:1;justify-content:center" onclick="giveRole(${m.id});closeMo('memberDetail')">Discord ↻</button>
+    </div>`;
+  openMo('memberDetail');
+}
+
+// ── ACTIONS ──
+function filterMem(el,f){
+  memberFilter=f;
+  document.querySelectorAll('#memFilters .btn').forEach(b=>b.classList.remove('on-filter'));
+  el.classList.add('on-filter');
+  renderMembers();
+}
+
+function promoteMember(id){
+  const m=members.find(x=>x.id===id);if(!m)return;
+  const ids=GRADES.map(g=>g.id),idx=ids.indexOf(m.grade);
+  if(idx<ids.length-1){
+    const from=gradeLabel(m.grade);
+    m.grade=ids[idx+1];
+    const g=GRADES[idx+1];
+    pushFeed(g.color,`<strong>${m.nomRp}</strong> promu <strong>${gradeLabel(m.grade)}</strong>`);
+    // En prod: appel API → bot attribue le rôle Discord
+    addNotif('🔑','Promotion + rôle Discord',`${m.nomRp} → ${gradeLabel(m.grade)} · Rôle Discord attribué`);
+    renderAll();toast('Promotion effectuée',m.nomRp+' → '+gradeLabel(m.grade)+' · Rôle Discord attribué','s');
+  } else toast('Grade maximum',m.nomRp+' est déjà au grade maximal','i');
+}
+
+function sanctionMember(id){
+  const m=members.find(x=>x.id===id);if(!m)return;
+  m.status=m.status==='actif'?'suspendu':'actif';
+  m.sanctions=m.status==='suspendu'?(m.sanctions||0)+1:m.sanctions;
+  pushFeed('#c97a2d',`Statut de <strong>${m.nomRp}</strong> → <strong>${m.status}</strong>`);
+  addNotif('⚠️','Sanction',`${m.nomRp} — ${m.status}`);
+  renderAll();toast('Sanction',m.nomRp+' — '+m.status,'w');
+}
+
+function giveRole(id){
+  const m=members.find(x=>x.id===id);if(!m)return;
+  const g=GRADES.find(gr=>gr.id===m.grade);
+  if(!g?.roleId){toast('Erreur','Aucun rôle Discord lié à ce grade. Configurez la liaison dans Rôles Discord.','e');return;}
+  // En prod: POST /api/discord/give-role {discordId, roleId}
+  pushFeed('#2d9e6b',`<strong>${m.nomRp}</strong> a reçu le rôle Discord <strong>${g.roleName||g.roleId}</strong>`);
+  addNotif('🔑','Rôle attribué',`${m.nomRp} → ${g.roleName||'Rôle #'+g.roleId.slice(-4)}`);
+  renderAll();toast('Rôle Discord attribué',m.nomRp+' → '+(g.roleName||g.roleId),'s');
+}
+
+function saveGradeRoles(){
+  // En prod: POST /api/config/grade-roles
+  renderAll();toast('Liaisons sauvegardées','Grades ↔ Rôles Discord mis à jour','s');
+}
+function savePerms(){
+  // En prod: POST /api/config/perms
+  renderAll();toast('Permissions sauvegardées','Matrice des droits mise à jour','s');
+}
+
+function syncBot(){
+  // En prod: POST /api/discord/sync → bot récupère membres et rôles
+  toast('Synchronisation Discord','Récupération des membres et rôles en cours…','i');
+  setTimeout(()=>{
+    pushFeed('#2d9e6b','Bot Discord synchronisé — <strong>'+members.length+' membres</strong> · <strong>'+discordRoles.length+' rôles</strong>');
+    addNotif('🤖','Sync Discord',''+members.length+' membres · '+discordRoles.length+' rôles récupérés');
+    renderAll();toast('Discord synchronisé','Membres et rôles à jour','s');
+  },1200);
+}
+
+function submitMember(){
+  const did=document.getElementById('am-did').value.trim();
+  const rp=document.getElementById('am-rp').value.trim();
+  const grade=document.getElementById('am-grade').value;
+  const status=document.getElementById('am-status').value;
+  const notes=document.getElementById('am-notes').value.trim();
+  if(!rp){toast('Erreur','Le nom RP est requis','e');return;}
+  const init=rp.split(' ').map(w=>w[0]).join('').toUpperCase().substring(0,2);
+  const newM={id:members.length+1,discordId:did||'0',username:rp.toLowerCase().replace(' ','_'),avatar:init,nomRp:rp,grade,status,rapports:0,sanctions:0,notes};
+  members.push(newM);
+  closeMo('addMember');
+  document.getElementById('am-did').value='';document.getElementById('am-rp').value='';document.getElementById('am-notes').value='';
+  // En prod: POST /api/members + bot attribue rôle Discord
+  pushFeed('#2d9e6b',`Nouveau membre <strong>${rp}</strong> — Grade ${gradeLabel(grade)} · Rôle Discord attribué`);
+  addNotif('👤','Nouveau membre',rp+' enregistré · Rôle Discord en cours…');
+  renderAll();toast('Membre créé',rp+' · Rôle Discord '+gradeLabel(grade)+' attribué','s');
+}
+
+function submitReport(){
+  const type=document.getElementById('ar-type').value;
+  const agent=document.getElementById('ar-agent').value;
+  const titre=document.getElementById('ar-titre').value.trim();
+  const desc=document.getElementById('ar-desc').value.trim();
+  if(!titre||!desc){toast('Erreur','Titre et description requis','e');return;}
+  const now=new Date(),p=v=>String(v).padStart(2,'0');
+  const id='OP-'+String(reports.length+13).padStart(4,'0');
+  reports.unshift({id,type,titre,desc,agent,date:now.toISOString().split('T')[0],time:`${p(now.getHours())}:${p(now.getMinutes())}`});
+  closeMo('addReport');
+  document.getElementById('ar-titre').value='';document.getElementById('ar-desc').value='';
+  pushFeed(rtColor(type),`<strong>${agent}</strong> a soumis le rapport <strong>${id}</strong>`);
+  addNotif('📋','Rapport soumis',id+' — '+titre);
+  renderAll();toast('Rapport soumis',id+' · Webhook Discord envoyé','s');
+}
+
+function submitFormation(){
+  const nom=document.getElementById('af-nom').value.trim();
+  const grade=document.getElementById('af-grade').value;
+  const cat=document.getElementById('af-cat').value;
+  const roleId=document.getElementById('af-role').value;
+  const desc=document.getElementById('af-desc').value.trim();
+  if(!nom){toast('Erreur','Intitulé requis','e');return;}
+  const icons={combat:'🎯',conduite:'🚗',procedure:'⚖️',infiltration:'🔦',medical:'🏥',autre:'📋'};
+  const roleN=discordRoles.find(r=>r.id===roleId)?.name||'';
+  formations.push({id:formations.length+1,nom,desc,grade,cat,icon:icons[cat]||'📋',roleId,roleName:roleN,assigned:0});
+  closeMo('addFormation');
+  ['af-nom','af-desc'].forEach(i=>document.getElementById(i).value='');
+  renderAll();toast('Formation créée',nom+' · Disponible à l\'assignation','s');
+}
+
+function submitRoleLink(){
+  const grade=document.getElementById('rl-grade').value;
+  const rid=document.getElementById('rl-rid').value.trim();
+  const rname=document.getElementById('rl-rname').value.trim();
+  const color=document.getElementById('rl-color').value;
+  if(!grade||!rid){toast('Erreur','Grade et ID rôle requis','e');return;}
+  const g=GRADES.find(x=>x.id===grade);
+  if(g){g.roleId=rid;g.roleName=rname;g.color=color;}
+  if(!discordRoles.find(r=>r.id===rid)){
+    discordRoles.push({id:rid,name:rname||'Rôle '+rid.slice(-4),color,memberCount:0});
+  }
+  closeMo('addRole');renderAll();toast('Rôle associé',gradeLabel(grade)+' → '+(rname||rid),'s');
+}
+
+function submitWh(){
+  const nom=document.getElementById('whn-nom').value.trim();
+  const url=document.getElementById('whn-url').value.trim();
+  const ev=document.getElementById('whn-ev').value;
+  if(!nom){toast('Erreur','Nom requis','e');return;}
+  DISCORD_CFG.webhooks.push({nom,url,ev,on:true});
+  closeMo('addWh');renderConfig();toast('Webhook ajouté',nom+' · '+ev,'s');
+}
+
+function validateAssign(i){assignments[i].statut='validated';renderFormations();toast('Formation validée','Rôle Discord attribué si configuré','s');}
+function refuseAssign(i){assignments[i].statut='refused';renderFormations();toast('Formation refusée','','i');}
+function assignFormation(id){const f=formations.find(x=>x.id===id);toast('Assignation',`Formulaire à compléter pour "${f?.nom}"` ,'i');}
+function exportPDF(id){toast('Export PDF',id+' généré','s');}
+function exportAll(){toast('Export',''+reports.length+' rapports exportés','s');}
+function deleteReport(id){reports=reports.filter(r=>r.id!==id);renderAll();toast('Supprimé',id,'w');}
+function saveGradeRoles2(){renderAll();toast('Sauvegardé','Liaisons grades Discord mises à jour','s');}
+function saveDiscordConfig(){DISCORD_CFG.guildId=document.getElementById('cfg-gid')?.value||'';renderConfig();toast('Config Discord','Sauvegardée','s');}
+function testBot(){toast('Test bot','Bot Discord opérationnel · 12ms','s');}
+function revokeAll(){toast('Sessions révoquées','Tous les utilisateurs déconnectés','w');}
+function saveOrgConfig(){
+  applyOrgName(document.getElementById('cfg-name')?.value||'Milice Cayo');
+  applyOrgSub(document.getElementById('cfg-sub')?.value||'MDT · Opérationnel');
+  toast('Sauvegardé','Configuration organisation mise à jour','s');
+}
+function applyOrgName(v){document.getElementById('orgName').textContent=v||'MDT';}
+function applyOrgSub(v){document.getElementById('orgSub').textContent=v||'';}
+function applyAccent(v){
+  document.documentElement.style.setProperty('--gold',v);
+  const r=v.match(/^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+  if(r){
+    const rgb=`${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}`;
+    document.documentElement.style.setProperty('--gold-dim',`rgba(${rgb},0.1)`);
+    document.documentElement.style.setProperty('--gold-mid',`rgba(${rgb},0.22)`);
+    document.documentElement.style.setProperty('--gold-hi',`rgba(${rgb},0.4)`);
+  }
+  toast('Couleur','Accent mis à jour','i');
+}
+
+function lookupDiscord(v){
+  // En prod: GET /api/discord/user/:id
+  const el=document.getElementById('am-preview');
+  if(!el)return;
+  if(v.length>15){
+    el.style.display='flex';
+    document.getElementById('am-pav').textContent=v.substring(0,2).toUpperCase();
+    document.getElementById('am-pinfo').innerHTML=`<strong style="font-size:12.5px">Utilisateur Discord</strong><br><span style="font-family:var(--mono);font-size:10px;color:var(--text-2)">ID: ${v}</span><br><span style="font-size:10.5px;color:var(--gold)">✓ Membre du serveur</span>`;
+  }else{el.style.display='none';}
+}
+
+function markAllRead(){notifications.forEach(n=>n.unread=false);renderNotifications();toast('Tout lu','','i');}
+function readNotif(id){const n=notifications.find(x=>x.id===id);if(n)n.unread=false;renderNotifications();}
+
+function pushFeed(color,text){
+  feedData.unshift({color,text,time:'À l\'instant'});
+  if(feedData.length>8)feedData.pop();
+  renderFeed();
+}
+function addNotif(icon,title,desc){
+  notifications.unshift({id:Date.now(),icon,title,desc,time:'À l\'instant',unread:true});
+  updateKpis();
+}
+
+function doSearch(q){
+  if(!q.trim())return;
+  const r=members.filter(m=>m.nomRp.toLowerCase().includes(q.toLowerCase())||m.username.toLowerCase().includes(q.toLowerCase()));
+  if(r.length)toast('Recherche',r.length+' membre(s) — '+q,'i');
+}
+
+// ── MODALS ──
+function openMo(id){document.getElementById('ov-'+id)?.classList.add('open');}
+function closeMo(id){document.getElementById('ov-'+id)?.classList.remove('open');}
+document.querySelectorAll('.ov').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});});
+
+// ── SELECT FILLS ──
+function fillSelects(){
+  ['am-grade','af-grade','rl-grade'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.innerHTML=GRADES.map(g=>`<option value="${g.id}">${g.label}</option>`).join('');
+  });
+  const rt=document.getElementById('ar-type');
+  if(rt)rt.innerHTML=REPORT_TYPES.map(t=>`<option value="${t.id}">${t.label}</option>`).join('');
+  const ra=document.getElementById('ar-agent');
+  if(ra)ra.innerHTML=members.filter(m=>m.status==='actif').map(m=>`<option value="${m.nomRp}">${m.nomRp} — ${gradeLabel(m.grade)}</option>`).join('');
+  const ri=document.getElementById('ar-involved');
+  if(ri)ri.innerHTML=members.map(m=>`<option value="${m.id}">${m.nomRp}</option>`).join('');
+  const afr=document.getElementById('af-role');
+  if(afr)afr.innerHTML=`<option value="">— Aucun —</option>`+discordRoles.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+}
+
+// ── BOT SIMULATION (En prod: remplacé par WebSocket bot réel) ──
+function initBotSimulation(){
+  // Simule les événements Discord en temps réel
+  setInterval(()=>{
+    const events=[
+      ()=>{pushFeed('#2d9e6b','<strong>Bot</strong> a synchronisé les rôles Discord');},
+      ()=>{if(Math.random()>0.7){const m=members[Math.floor(Math.random()*members.length)];pushFeed('#c9a84c',`<strong>${m.nomRp}</strong> s'est connecté sur Discord`);}},
+    ];
+    events[Math.floor(Math.random()*events.length)]();
+  }, 30000);
+}
+
+// ── TOAST ──
+function toast(title,msg,type='i'){
+  const t=document.createElement('div');
+  t.className='tst '+(type==='s'?'s':type==='e'?'e':type==='w'?'w':'');
+  t.innerHTML=`<div><div class="tst-t">${title}</div>${msg?`<div class="tst-m">${msg}</div>`:''}</div>`;
+  document.getElementById('toastCt').appendChild(t);
+  setTimeout(()=>t.remove(),4000);
+}
+
+// ── INIT ──
+// En prod: vérifier JWT/session → si valide: launchApp(), sinon: showLogin()
+// Ici: afficher login
+// Pour démo rapide, décommentez la ligne suivante:
+// launchApp();
+</script>
+</body>
+</html>
